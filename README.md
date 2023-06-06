@@ -1,4 +1,5 @@
-# coffee_masters
+# Coffee Masters
+![full](https://github.com/KvRae/CoffeeMasters/assets/58667227/f06a0c08-1aaa-47d9-807c-b585ca0ea340)
 
 Flutter App made following the Frontend Masters course by Maximiliano.
 
