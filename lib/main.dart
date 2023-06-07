@@ -2,6 +2,7 @@ import 'package:coffee_masters/dataManager.dart';
 import 'package:coffee_masters/pages/menu_page.dart';
 import 'package:coffee_masters/pages/offerspage.dart';
 import 'package:coffee_masters/pages/orders_page.dart';
+import 'package:coffee_masters/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,10 +19,9 @@ class MyApp extends StatelessWidget {
       title: 'Coffee Masters',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-      
         primarySwatch: Colors.brown,
       ),
-      home: const MyHomePage(),
+      home: const SplashScreen(),
     );
   }
 }
