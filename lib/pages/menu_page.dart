@@ -1,17 +1,58 @@
+import 'package:coffee_masters/dataManager.dart';
 import 'package:coffee_masters/datamodel.dart';
 import 'package:flutter/material.dart';
 
 class MenuPage extends StatelessWidget {
-  const MenuPage({Key? key}) : super(key: key);
+  final DataManager dataManager  ;
+  const MenuPage({Key? key, required this.dataManager}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var p = Product(id: 1, name: "Dummy Product", price: 25, image: "image");
-    var q = Product(id: 2, name: "Dummy Product but diffrenet", price: 25, image: "image");
-    return ListView(children:[
-    ProductItem(product: p, onAdd: (){},),
-    ProductItem(product: q, onAdd: (){})
-    ]);
+   return FutureBuilder(
+      future: dataManager.getMenu(),
+        builder: ((context, snapshot) {
+          if(snapshot.hasData) {
+            // The Future has finished , data is here
+            var categories = snapshot.data! as List<Category>;
+            return ListView.builder(
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(categories[index].name),
+                  ),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: categories[index].products.length,
+                      itemBuilder: (context, prodIndex) {
+                        var product = categories[index].products[prodIndex];
+                        return ProductItem(
+                            product: product,
+                            onAdd: (addedProduct){
+                              print(addedProduct.name);
+                              dataManager.cartAdd(addedProduct);
+                              print(dataManager.cart.length);
+                        });
+                      }
+                  )
+                ],
+              );
+            },
+            );
+
+          }else if (snapshot.hasError){
+            // Data is not there, has an error
+            return Center(child: const Text("There was an error"));
+          }
+          else{
+            // Data is not there (Future is in progress)
+            return Center(child: const CircularProgressIndicator());
+          }
+    })
+    );
   }
 }
 
@@ -31,7 +72,7 @@ class ProductItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset("images/black_coffee.png",fit: BoxFit.fitWidth),
+            Image.network(product.imageUrl),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -47,14 +88,23 @@ class ProductItem extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(product.price.toString()),
+                      child: Text("\$" +product.price.toStringAsFixed(2)),
                     ),
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0),
                   child: ElevatedButton(
-                      onPressed: (){onAdd(product);},
+                      onPressed: (){
+                        // Show a snackbar
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Added ${product.name} to cart"),
+                              duration: Duration(seconds: 1),
+                            )
+                        );
+                        onAdd(product);
+                        },
                       child: Text("Add")
                   ),
                 ),

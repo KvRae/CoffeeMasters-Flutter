@@ -34,6 +34,7 @@ class Offer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var sizeScreen = MediaQuery.of(context).size; // gets the screen size of the device
     return SizedBox(
       height: 150,
       child: Padding(
