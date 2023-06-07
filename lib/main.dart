@@ -1,3 +1,6 @@
+import 'package:coffee_masters/pages/menu_page.dart';
+import 'package:coffee_masters/pages/offerspage.dart';
+import 'package:coffee_masters/pages/orders_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,23 +33,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+  var selectedIndex = 0 ;
   @override
   Widget build(BuildContext context) {
+
+    Widget currentPage = Text("data");
+    switch (selectedIndex) {
+      case 0 : currentPage = MenuPage(); break ;
+      case 1 : currentPage = OffersPage(); break ;
+      case 2 : currentPage = OrdersPage(); break ;
+
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Image.asset("images/logo.png")),
       ),
-      body: Scaffold(
-        
-      )
+      body: currentPage,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedIndex,
+        onTap: (newIndex){
+          setState((){
+            selectedIndex = newIndex ; //change the state
+          });
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+        selectedItemColor: Colors.yellow.shade400,
+        unselectedItemColor: Colors.brown.shade50,
+        items: [
+          BottomNavigationBarItem(label: "Menu", icon: Icon(Icons.coffee)),
+          BottomNavigationBarItem(label: "Offers", icon: Icon(Icons.local_offer)),
+          BottomNavigationBarItem(label: "Orders", icon: Icon(Icons.shopping_cart_checkout_outlined))
+        ],
+      ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
